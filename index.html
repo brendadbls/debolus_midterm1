@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Event Driven (Midterm Exam)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,500&display=swap');
+
+        body {
+            font-family: Montserrat,Arial, Helvetica, sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        /* Add padding to container elements */
+        form {
+            padding: 20px;
+            width: 100%;
+            background: white;
+        }
+
+        /* Full-width input fields */
+        input[type=text],
+        input[type=number],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f7f7f7;
+            font-family: Montserrat,Arial, Helvetica, sans-serif;
+        }
+
+        input[type=phone],
+        select {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f7f7f7;
+        }
+
+        /* Set a style for all buttons */
+        button {
+            background-color: #0eb7f4;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+            font-size: 16px;
+            font-family: Montserrat,Arial, Helvetica, sans-serif;
+            border-radius: 10px;
+        }
+
+        button:hover {
+            opacity: 1;
+        }
+
+        .ptag {
+            color: red;
+        }
+
+        /* Change styles for signup button on extra small screens */
+        @media screen and (max-width: 300px) {
+            .signupbtn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="p-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <form>
+                <h3>Product Management</h3>
+                <p>* - Required Fields</p>
+
+                <label for="prodid"><b>Product ID <span class='text-danger'>*</span></b></label>
+                <input type="text" id="prodid" readonly value="EVNT-DRV-1">
+
+                <label for="prodname"><b>Product Name <span class='text-danger'>*</span></b></label>
+                <input type="text" id="prodname">
+
+                <label for="prodcategory"><b>Category <span class='text-danger'>*</span></b></label>
+                <select id="prodcategory">
+                    <option>--Select Category--</option>
+                    <option>Food and Beverage</option>
+                    <option>Kitchen Appliances</option>
+                    <option>IT Equipment</option>
+                    <option>Shoes and Clothing</option>
+                </select>
+
+                <label for="sellprice"><b>Selling Price <span class='text-danger'>*</span></b></label>
+                <input type="number" id="sellprice" name="sellprice">
+
+                <button class="bg-primary btn-sm" type='button' onclick="saveProduct()">Save</button>
+            </form>
+        </div>
+        <div class="col-lg-8">
+            <div class="row mb-4">
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-0 rounded-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <small class="text-muted mb-0">Food and Beverage</small><br />
+                                    <span class="h2 font-weight-bold mb-0 text-primary category-count"
+                                        id="food-and-beverage-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-0 rounded-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <small class="text-muted mb-0">Kitchen Appliances</small><br />
+                                    <span class="h2 font-weight-bold mb-0 text-primary category-count"
+                                        id="kitchen-appliances-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-0 rounded-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <small class="text-muted mb-0">IT Equipment</small><br />
+                                    <span class="h2 font-weight-bold mb-0 text-primary category-count"
+                                        id="it-equipment-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl-0 rounded-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <small class="text-muted mb-0">Shoes and Clothing</small><br />
+                                    <span class="h2 font-weight-bold mb-0 text-primary category-count"
+                                        id="shoes-and-clothing-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <select class='bg-white' id='filterCategory' style='border: 1px solid #ddd !important;'
+                onchange='filtercatChange()'>
+                <option>--Filter by Category--</option>
+                <option>See All</option>
+                <option>Food and Beverage</option>
+                <option>Kitchen Appliances</option>
+                <option>IT Equipment</option>
+                <option>Shoes and Clothing</option>
+            </select>
+
+            <table class="table table-responsive ">
+                <thead class='text-center'>
+                    <tr>
+                        <th scope="col" class="bg-primary text-white">Product ID</th>
+                        <th scope="col" class="bg-primary text-white">Name</th>
+                        <th scope="col" class="bg-primary text-white">Category</th>
+                        <th scope="col" class="bg-primary text-white">Selling Price</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyproducts" class='text-center'></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        var products = [];
+        var categoryCounts = {
+            'Food and Beverage': 0,
+            'Kitchen Appliances': 0,
+            'IT Equipment': 0,
+            'Shoes and Clothing': 0
+        };
+
+        
+        function generateProductId() {
+            var lastProductId = products.length > 0 ? products[products.length - 1].id : 0;
+            var increment = lastProductId ? parseInt(lastProductId.split('-').pop()) + 1 : 1;
+            return `EVNT-DRIV-MID-${increment}`;
+        }
+
+        
+        function saveProduct() {
+            var productName = document.getElementById('prodname').value;
+            var category = document.getElementById('prodcategory').value;
+            var sellingPrice = document.getElementById('sellprice').value;
+
+            if (productName && category && sellingPrice) {
+                var productId = generateProductId();
+                var product = {
+                    id: productId,
+                    name: productName,
+                    category: category,
+                    price: parseFloat(sellingPrice)
+                };
+                products.push(product);
+
+                
+                populateTable(products);
+            } else {
+                alert('Please complete all fields to save the product.');
+            }
+        }
+
+        
+        function populateTable(products) {
+            var tbody = document.getElementById('tbodyproducts');
+            tbody.innerHTML = ''; 
+    
+        
+        Object.keys(categoryCounts).forEach(function(category) {
+            categoryCounts[category] = 0;
+    });
+    
+    products.forEach(function (product) {
+        var row = tbody.insertRow();
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+
+        cell1.textContent = product.id;
+        cell2.textContent = product.name;
+        cell3.textContent = product.category;
+        cell4.textContent = product.price.toFixed(2);
+
+        
+        categoryCounts[product.category]++;
+    });
+
+    var categories = Object.keys(categoryCounts);
+    categories.forEach(function (category) {
+        var element = document.getElementById(category.replace(/\s+/g, '-').toLowerCase() + '-count');
+        if (element) {
+            element.textContent = categoryCounts[category];
+        }
+    });
+}
+
+
+        function filtercatChange() {
+            var selectedCategory = document.getElementById('filterCategory').value;
+            var filteredProducts = [];
+
+            
+            if (selectedCategory === 'See All') {
+                filteredProducts = products; 
+            } else {
+                filteredProducts = products.filter(function (product) {
+                    return product.category === selectedCategory;
+                });
+            }
+
+            
+            populateTable(filteredProducts);
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
+
